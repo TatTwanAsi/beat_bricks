@@ -6,6 +6,7 @@ class Board:
 	def __init__(self, width, height, color, location):
 
 		"""初始化板子"""
-		self.rect = pygame.Rect(0, 0, width, height)
+		self.surface = pygame.Surface((width, height))
+		self.rect = self.surface.get_rect()
 		self.rect.midbottom = location
 		self.color = color
