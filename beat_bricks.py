@@ -1,15 +1,19 @@
 import pygame
 
+from settings import Settings
+
 class BeatBricks:
 
 	"""管理《打砖块》的游戏资源以及行为"""
 	def __init__(self):
 
-		"""初始化游戏参数设置，加载游戏资源"""
+		"""加载游戏参数设置和游戏资源"""
 		pygame.init()
 
-		self.screen = pygame.display.set_mode((1200, 800))
-		self.bg_color = (31, 31, 31)
+		# 管理游戏设置的实例
+		self.settings = Settings()
+
+		self.screen = pygame.display.set_mode(self.settings.screen_size)
 
 
 	def run_game(self):
@@ -25,7 +29,7 @@ class BeatBricks:
 
 
 			# 绘制背景，应用指定的背景颜色
-			self.screen.fill(self.bg_color)
+			self.screen.fill(self.settings.bg_color)
 
 			# 将绘制的画面显示出来
 			pygame.display.flip()
