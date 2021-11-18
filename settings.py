@@ -18,6 +18,18 @@ class Settings:
 		self.brick_height = 30
 		self.brick_color = (25, 161, 94)
 
-		# 砖块墙
+		# 墙
 		self.row = 11
 		self.column = 15
+
+		# 道具
+		self.heart_size = (30, 30)
+		self.heart_num = 3
+		self.lengthen_size = (30, 30)
+		self.lengthen_num = 3
+		self.lock_size = (30, 30)
+		self.lock_num = 3
+		self.turtle_size = (30, 30)
+		self.turtle_num = 3
+		self.through_wall_size = (30, 30)
+		self.through_wall_num = 3
