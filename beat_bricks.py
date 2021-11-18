@@ -1,4 +1,5 @@
 import pygame
+import time
 from pygame.sprite import Sprite
 
 from settings import Settings
@@ -37,24 +38,29 @@ class BeatBricks:
 		"""游戏的主循环，事件监测以及更新画面"""
 		while True:
 			# 游戏主循环
-			self._check_event()
-			self._movement()
-			self._update_screen()
+			self._check_input_event()		# 检测输入事件
+			self.board.move()				# 板子的运动
+			self._update_ball()				# 更新小球的运动
+			self._update_screen()			# 更新屏幕
 			
 
-	def _check_event(self):
+	def _check_input_event(self):
 
-		"""检测事件"""
+		"""检测输入事件"""
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				quit()
 
 
-	def _movement(self):
+	def _update_ball(self):
 
-		"""游戏中各种元素运动的函数"""
-		self.board.move()
-		self.ball.move()
+		"""检查小球的状态，管理小球的运动"""
+		self.ball.move() #小球运动
+
+		# 若小球越过底部边界，则游戏暂停0.5秒，然后将小球归位
+		if self.ball.rect.top > self.screen_rect.bottom:
+			time.sleep(0.5)
+			self.ball.reset_pos()
 
 
 	def _update_screen(self):

@@ -18,7 +18,7 @@ class Settings:
 		self.ball_height = 40
 		self.ball_color = (255, 200, 69)
 		self.ball_speed_x = 1
-		self.ball_speed_y = 0.6
+		self.ball_speed_y = 1
 
 		# 砖块
 		self.brick_width = 70
