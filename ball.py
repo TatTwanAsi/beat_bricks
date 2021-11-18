@@ -17,6 +17,8 @@ class Ball:
 		self.surface = pygame.transform.scale(self.surface, (self.width, self.height))
 		self.rect = self.surface.get_rect()
 
+		self.x = self.rect.x
+		self.y = self.rect.y
 
 	def stick_to_board(self):
 
@@ -28,4 +30,5 @@ class Ball:
 
 		"""将小球绘制在板子上"""
 		self.screen.blit(self.surface, self.rect)
-		
+	
+	
