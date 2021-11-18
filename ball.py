@@ -17,8 +17,47 @@ class Ball:
 		self.surface = pygame.transform.scale(self.surface, (self.width, self.height))
 		self.rect = self.surface.get_rect()
 
+		self.reset_pos()
+
 		self.x = self.rect.x
 		self.y = self.rect.y
+
+		self.speed_x = game.settings.ball_speed_x
+		self.speed_y = game.settings.ball_speed_y
+
+		
+
+
+	def reset_pos(self):
+
+		"""将小球的位置回归到板子上"""
+		self.rect.midbottom = self.game.board.rect.center
+		print
+		print(1)
+
+
+	def move(self):
+
+		"""小球运动"""
+		self.x += self.speed_x
+		self.y -= self.speed_y
+		self.rect.x = self.x
+		self.rect.y = self.y
+		self._check_hit_border()
+
+
+	def _check_hit_border(self):
+
+		"""
+		监测小球是否碰壁
+		若是，则改变运动方向
+		"""
+		if self.rect.left <= 0 or self.rect.right >= self.screen_rect.right:
+			self.speed_x *= -1
+
+		if self.rect.top <= 0 or self.rect.bottom > self.screen_rect.bottom:
+			self.speed_y *= -1
+
 
 	def stick_to_board(self):
 

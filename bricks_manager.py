@@ -24,10 +24,9 @@ class BricksManager:
 		self.brick_height = game.settings.brick_height
 		self.brick_color = game.settings.brick_color
 
-		# 砖块的编组
-		self.bricks = pygame.sprite.Group()
+		self.bricks = pygame.sprite.Group() # 砖块的编组
 
-		self._fill_wall_with_bricks()
+		self._fill_wall_with_bricks()		# 在墙上铺满砖块
 
 
 	def _fill_wall_with_bricks(self):

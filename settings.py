@@ -17,8 +17,8 @@ class Settings:
 		self.ball_width = 40
 		self.ball_height = 40
 		self.ball_color = (255, 200, 69)
-		self.speed_x = 5
-		self.speed_y = 3
+		self.ball_speed_x = 1
+		self.ball_speed_y = 0.6
 
 		# 砖块
 		self.brick_width = 70
@@ -38,5 +38,5 @@ class Settings:
 		self.lock_num = 3
 		self.turtle_size = (30, 30)
 		self.turtle_num = 3
-		self.through_wall_size = (60, 30)
+		self.through_wall_size = (70, 30)
 		self.through_wall_num = 3

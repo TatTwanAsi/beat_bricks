@@ -13,33 +13,24 @@ class BonusManager:
 		# 墙的行和列
 		self.row = game.settings.row
 		self.column = game.settings.column
-
 		# 墙上每个单元格在x，y上的大小
 		self.unit_y = (float(game.settings.screen_height)/2)/(float(self.row)+1)
 		self.unit_x = float(game.settings.screen_width)/(float(self.column)+1)
-
-		# 创建一个空的道具编组
-		self.bonus = pygame.sprite.Group()
-
-		# 存放各个道具的位置，防止生成的道具位置重叠
-		self.bonus_locations = []
-
+		self.bonus = pygame.sprite.Group()	# 创建一个空的道具编组
+		self.bonus_locations = []			# 存放各个道具的位置，防止生成的道具位置重叠
 		# 各个道具的个数
 		self.heart_num = game.settings.heart_num
 		self.lengthen_num = game.settings.lengthen_num
 		self.lock_num = game.settings.lock_num
 		self.turtle_num = game.settings.turtle_num
 		self.through_wall_num = game.settings.through_wall_num
-
 		# 各个道具的大小
 		self.heart_size = game.settings.heart_size
 		self.lengthen_size = game.settings.lengthen_size
 		self.lock_size = game.settings.lock_size
 		self.turtle_size = game.settings.turtle_size
 		self.through_wall_size = game.settings.through_wall_size
-
-		# 生成道具
-		self._generate_bonus()
+		self._generate_bonus()	# 生成道具
 
 
 	def _generate_bonus(self):
