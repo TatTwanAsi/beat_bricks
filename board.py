@@ -7,6 +7,6 @@ class Board:
 
 		"""初始化板子"""
 		self.surface = pygame.Surface((width, height))
-		self.surface.fill(color)
 		self.rect = self.surface.get_rect()
 		self.rect.midbottom = location
+		self.color = color

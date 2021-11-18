@@ -83,7 +83,7 @@ class BeatBricks:
 		self.screen.fill(self.settings.bg_color)
 
 		# 将板子绘制到背景上
-		self.screen.blit(self.board.surface, self.board.rect)
+		pygame.draw.rect(self.screen, self.board.color, self.board.rect)
 
 		# 隐藏鼠标
 		self._hide_mouse()
