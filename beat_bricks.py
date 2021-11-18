@@ -1,7 +1,10 @@
 import pygame
+from pygame.sprite import Sprite
 
 from settings import Settings
 from board import Board
+from brick import Brick
+
 
 class BeatBricks:
 
@@ -14,11 +17,33 @@ class BeatBricks:
 		# 管理游戏设置的实例
 		self.settings = Settings()
 
-		# 游戏屏幕的surface
+		# 游戏屏幕的surface和rect
 		self.screen = pygame.display.set_mode(self.settings.screen_size)
+		self.screen_rect = self.screen.get_rect()
 
 		# 游戏中的板子
-		self.board = Board(self.settings.board_width, self.settings.board_height, self.settings.board_color, self.screen.get_rect().midbottom)
+		self.board = Board(self.settings.board_width, self.settings.board_height, self.settings.board_color, self.screen_rect.midbottom)
+
+		# 游戏中的砖块墙
+		self.bricks = pygame.sprite.Group()
+		self._create_bricks()
+
+
+	def _create_bricks(self):
+
+		"""创建砖块墙"""
+		row = self.settings.row
+		column = self.settings.column
+		increment_y = (float(self.settings.screen_height)/2)/(float(row)+1)
+		increment_x = float(self.settings.screen_width)/(float(column)+1)
+		brick_width = self.settings.brick_width
+		brick_height = self.settings.brick_height
+		brick_color = self.settings.brick_color
+		for row_num in range(row):
+			for column_num in range(column):
+				location = ((column_num + 1.0)*increment_x, (row_num + 1.0)*increment_y)
+				brick = Brick(brick_width, brick_height, brick_color, location)
+				self.bricks.add(brick)
 
 
 	def run_game(self):
@@ -30,7 +55,6 @@ class BeatBricks:
 			self._move_board()
 			self._update_screen()
 			
-
 
 	def _check_event(self):
 
@@ -61,7 +85,11 @@ class BeatBricks:
 		# 将板子绘制到背景上
 		self.screen.blit(self.board.surface, self.board.rect)
 
+		# 隐藏鼠标
 		self._hide_mouse()
+
+		# 绘制砖块墙
+		self.bricks.draw(self.screen)
 
 		# 将绘制的画面显示出来
 		pygame.display.flip()
