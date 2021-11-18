@@ -6,6 +6,7 @@ from settings import Settings
 from board import Board
 from brick import Brick
 from bonus import PropHeart, PropLengthen, PropLock, PropThroughWall, PropTurtle
+from ball import Ball
 
 
 class BeatBricks:
@@ -25,6 +26,9 @@ class BeatBricks:
 
 		# 游戏中的板子
 		self.board = Board(self.settings.board_width, self.settings.board_height, self.settings.board_color, self.screen_rect.midbottom)
+
+		# 游戏中的小球
+		self.ball = Ball(self)
 
 		# 游戏中的砖块墙
 		self.bricks = pygame.sprite.Group()
@@ -172,6 +176,7 @@ class BeatBricks:
 			# 游戏主循环
 			self._check_event()
 			self._move_board()
+			self.ball.stick_to_board()
 			self._update_screen()
 			
 
@@ -203,6 +208,9 @@ class BeatBricks:
 
 		# 将板子绘制到背景上
 		pygame.draw.rect(self.screen, self.board.color, self.board.rect)
+
+		# 将小球绘制
+		self.ball.blitme()
 
 		# 隐藏鼠标
 		self._hide_mouse()
