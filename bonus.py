@@ -12,6 +12,13 @@ class PropHeart(Sprite):
 		self.image = pygame.transform.scale(self.image, size)
 		self.rect = self.image.get_rect()
 		self.rect.midtop = location
+		self.name = 'heart'
+
+
+	def get_name(self):
+
+		"""返回道具名称"""
+		return self.name
 
 
 class PropLengthen(Sprite):
@@ -25,6 +32,13 @@ class PropLengthen(Sprite):
 		self.image = pygame.transform.scale(self.image, size)
 		self.rect = self.image.get_rect()
 		self.rect.midtop = location
+		self.name = 'lengthen'
+
+
+	def get_name(self):
+
+		"""返回道具名称"""
+		return self.name
 
 
 class PropLock(Sprite):
@@ -38,6 +52,13 @@ class PropLock(Sprite):
 		self.image = pygame.transform.scale(self.image, size)
 		self.rect = self.image.get_rect()
 		self.rect.midtop = location
+		self.name = 'lock'
+
+
+	def get_name(self):
+
+		"""返回道具名称"""
+		return self.name
 
 
 class PropThroughWall(Sprite):
@@ -51,6 +72,13 @@ class PropThroughWall(Sprite):
 		self.image = pygame.transform.scale(self.image, size)
 		self.rect = self.image.get_rect()
 		self.rect.midtop = location
+		self.name = 'through_wall'
+
+
+	def get_name(self):
+
+		"""返回道具名称"""
+		return self.name
 
 
 class PropTurtle(Sprite):
@@ -64,3 +92,10 @@ class PropTurtle(Sprite):
 		self.image = pygame.transform.scale(self.image, size)
 		self.rect = self.image.get_rect()
 		self.rect.midtop = location
+		self.name = 'turtle'
+
+
+	def get_name(self):
+
+		"""返回道具名称"""
+		return self.name

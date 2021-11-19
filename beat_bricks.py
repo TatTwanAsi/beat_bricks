@@ -1,4 +1,5 @@
 import pygame
+import asyncio
 import time
 from pygame.sprite import Sprite
 
@@ -33,7 +34,18 @@ class BeatBricks:
 		pygame.sprite.groupcollide(self.bricks_manager.bricks, self.bonus_manager.bonus, True, False)# 将已有的道具，去替换掉墙上的砖块
 
 
-	def run_game(self):
+	async def run_game(self):
+
+		"""运行游戏，执行两个协程"""
+		# 主循环协程
+		task_main_loop = asyncio.create_task(self._main_loop())
+		# 检测道具属性的协程
+		task_check_effect_loop = asyncio.create_task(self._check_effect_loop())
+		await task_main_loop
+		await task_check_effect_loop
+			
+
+	async def _main_loop(self):
 
 		"""游戏的主循环，事件监测以及更新画面"""
 		while True:
@@ -42,6 +54,18 @@ class BeatBricks:
 			self.board.move()				# 板子的运动
 			self._update_ball()				# 更新小球的运动
 			self._update_screen()			# 更新屏幕
+			await asyncio.sleep(0.00000000000000001)
+
+
+	async def _check_effect_loop(self):
+
+		"""检查游戏中各个元素是否被赋予了道具效果"""
+		while True:
+			task_check_board_effect = asyncio.create_task(self.board.check_effect())
+			task_check_ball_effect = asyncio.create_task(self.ball.check_effect())
+			await task_check_board_effect
+			await task_check_ball_effect
+
 			
 
 	def _check_input_event(self):
@@ -61,6 +85,16 @@ class BeatBricks:
 		if self.ball.rect.top > self.screen_rect.bottom:
 			time.sleep(0.5)
 			self.ball.reset_pos()
+			self.settings.ball_number -= 1
+
+		# 检测小球是否打到砖块
+		self.ball.check_beat_brick()
+
+		# 检测小球是否打到板子
+		self.ball.check_hit_board()
+
+		# 检测小球是否打到道具
+		self.ball.check_hit_bonus()
 
 
 	def _update_screen(self):
@@ -89,4 +123,4 @@ class BeatBricks:
 if __name__ == "__main__":
 
 	bb = BeatBricks()
-	bb.run_game()
+	asyncio.run(bb.run_game())

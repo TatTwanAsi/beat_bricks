@@ -1,4 +1,6 @@
 import pygame
+import asyncio
+import time
 
 class Board:
 
@@ -19,6 +21,9 @@ class Board:
 		self.rect = self.surface.get_rect()
 		self.rect.midbottom = self.screen_rect.midbottom
 
+		# 板子属性
+		self.is_lengthen = False
+
 
 	def move(self):
 
@@ -30,6 +35,44 @@ class Board:
 
 		if mouse_pos_x - board_width/2 >= left_border_x and mouse_pos_x + board_width/2 <= right_border_x:
 			self.rect.centerx = mouse_pos_x
+
+
+	async def check_effect(self):
+
+		"""
+		检查板子的道具效果
+		若检测到增长属性为真，则增长
+		增长3秒后，变回原来的长度
+		"""
+		# print(1)
+		if self.is_lengthen:
+			task_lengthen = asyncio.create_task(self._lengthen_board())
+			task_shorten = asyncio.create_task(self._turn_width_back_after(2))
+			await task_lengthen
+			await task_shorten
+		await asyncio.sleep(0.0000000001)
+
+
+	async def _lengthen_board(self):
+
+		"""增长板子"""
+		self.is_lengthen = False
+		self.surface = pygame.Surface((self.width * 3, self.height))
+		self.surface.fill(self.color)
+		self.rect = self.surface.get_rect()
+		self.rect.bottom = self.screen_rect.bottom
+		self.rect.centerx = pygame.mouse.get_pos()[0]
+
+
+	async def _turn_width_back_after(self, delay):
+		
+		"""等待delay秒后将板子变回原来的长度"""
+		await asyncio.sleep(delay)
+		self.surface = pygame.Surface((self.width, self.height))
+		self.surface.fill(self.color)
+		self.rect = self.surface.get_rect()
+		self.rect.bottom = self.screen_rect.bottom
+		self.rect.centerx = pygame.mouse.get_pos()[0]
 
 
 	def blitme(self):
