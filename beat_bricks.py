@@ -83,9 +83,13 @@ class BeatBricks:
 
 		# 若小球越过底部边界，则游戏暂停0.5秒，然后将小球归位
 		if self.ball.rect.top > self.screen_rect.bottom:
+			self.settings.ball_number -= 1
+
+			# 若小球耗尽，则游戏失败
+			if self.settings.ball_number < 0:
+				pass
 			time.sleep(0.5)
 			self.ball.reset_pos()
-			self.settings.ball_number -= 1
 
 		# 检测小球是否打到砖块
 		self.ball.check_beat_brick()

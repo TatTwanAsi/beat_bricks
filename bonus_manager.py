@@ -103,6 +103,26 @@ class BonusManager:
 					break
 
 
+	def _generate_through_wall(self):
+		
+		"""生成穿墙道具"""
+		for num in range(self.through_wall_num):
+			while True:
+				# 生成两个随机数，分别代表道具的行和列，
+				column_num = random.randint(0, self.column-1)
+				row_num = random.randint(0, self.row-1)
+
+				# 检查所生成的位置是否已被其他道具占有
+				# 若是，则更换位置
+				# 直到与其他道具位置不冲突位置
+				if (column_num, row_num) not in self.bonus_locations:
+					self.bonus_locations.append((column_num, row_num))
+					location = ((column_num + 1.0)*self.unit_x, (row_num + 1.0)*self.unit_y)
+					through_wall = PropThroughWall(self.turtle_size, location)
+					self.bonus.add(through_wall)
+					break
+					
+
 	def _generate_turtle(self):
 		
 		"""生成乌龟道具"""
@@ -119,25 +139,5 @@ class BonusManager:
 					self.bonus_locations.append((column_num, row_num))
 					location = ((column_num + 1.0)*self.unit_x, (row_num + 1.0)*self.unit_y)
 					turtle = PropTurtle(self.turtle_size, location)
-					self.bonus.add(turtle)
-					break
-
-
-	def _generate_through_wall(self):
-		
-		"""生成穿墙道具"""
-		for num in range(self.turtle_num):
-			while True:
-				# 生成两个随机数，分别代表道具的行和列，
-				column_num = random.randint(0, self.column-1)
-				row_num = random.randint(0, self.row-1)
-
-				# 检查所生成的位置是否已被其他道具占有
-				# 若是，则更换位置
-				# 直到与其他道具位置不冲突位置
-				if (column_num, row_num) not in self.bonus_locations:
-					self.bonus_locations.append((column_num, row_num))
-					location = ((column_num + 1.0)*self.unit_x, (row_num + 1.0)*self.unit_y)
-					turtle = PropThroughWall(self.turtle_size, location)
 					self.bonus.add(turtle)
 					break

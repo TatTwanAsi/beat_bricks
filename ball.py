@@ -60,10 +60,26 @@ class Ball(Sprite):
 
 		else:
 			self._check_hit_border()
-			self.x += self.speed_x
-			self.y -= self.speed_y
+
+			# 若有乌龟道具效果，则速度变为原来的五分之一
+			if self.is_turtle:
+				self.x += self.speed_x/5
+				self.y -= self.speed_y/5
+			else:
+				self.x += self.speed_x
+				self.y -= self.speed_y
 			self.rect.x = self.x
 			self.rect.y = self.y
+
+
+	def _stick_to_board(self):
+
+		"""小球附着在板子上"""
+		self.rect.midbottom = self.game.board.rect.center
+		self.x = float(self.rect.x)
+		self.y = float(self.rect.y)
+		self.speed_x *= -1
+		self.speed_y = self.game.settings.ball_speed_y
 		
 
 	def _check_hit_border(self):
@@ -89,15 +105,21 @@ class Ball(Sprite):
 		collided_brick = pygame.sprite.spritecollideany(self, self.bricks)
 		if collided_brick:
 
-			# 根据碰撞时小球与砖块的位置关系，改变小球的运动方向
-			if collided_brick.rect.left < self.rect.centerx < collided_brick.rect.right:
-				self.speed_y *= -1.0
+			# 如果有穿墙效果，就直接穿过
+			if self.is_through_wall:
+				print(1)
 
-			elif collided_brick.rect.top < self.rect.centery < collided_brick.rect.bottom:
-				self.speed_x *= -1.0
+			else:
 
-			# 删除该砖块
-			collided_brick.kill()
+				# 根据碰撞时小球与砖块的位置关系，改变小球的运动方向
+				if collided_brick.rect.left < self.rect.centerx < collided_brick.rect.right:
+					self.speed_y *= -1.0
+	
+				elif collided_brick.rect.top < self.rect.centery < collided_brick.rect.bottom:
+					self.speed_x *= -1.0
+	
+				# 删除该砖块
+				collided_brick.kill()
 
 
 	def check_hit_board(self):
@@ -110,6 +132,11 @@ class Ball(Sprite):
 			self.speed_y *= -1.0
 
 
+
+
+	def _set_speed_x_according_to_board(self):
+
+
 	def check_hit_bonus(self):
 
 		"""
@@ -118,6 +145,7 @@ class Ball(Sprite):
 		"""
 		collided_bonus = pygame.sprite.spritecollideany(self, self.bonus)
 		if collided_bonus:
+
 			if collided_bonus.get_name() == 'heart':
 				self.game.settings.ball_number += 1
 
@@ -140,20 +168,20 @@ class Ball(Sprite):
 
 		"""检查球的道具效果"""
 
-		# 吃到锁头道具，就黏在板子上动不了
-		if self.is_lock == True:
+		# 吃到锁头道具几秒后回归正常
+		if self.is_lock:
 			task_free = asyncio.create_task(self._free_ball_after(3))
 			await task_free
 
+		# 吃到穿墙道具几秒后回归正常
+		elif self.is_through_wall:
+			task_solidify = asyncio.create_task(self._solidify_ball_after(3))
+			await task_solidify
 
-	def _stick_to_board(self):
-
-		"""小球附着在板子上"""
-		self.rect.midbottom = self.game.board.rect.center
-		self.x = float(self.rect.x)
-		self.y = float(self.rect.y)
-		self.speed_x *= -1
-		self.speed_y = self.game.settings.ball_speed_y
+		# 吃到乌龟道具几秒后回归正常
+		elif self.is_turtle:
+			task_back_to_normal_speed = asyncio.create_task(self._back_to_normal_speed_after(3))
+			await task_back_to_normal_speed
 
 
 	async def _free_ball_after(self, delay):
@@ -162,6 +190,19 @@ class Ball(Sprite):
 		await asyncio.sleep(delay)
 		self.is_lock = False
 
+
+	async def _solidify_ball_after(self, delay):
+
+		"""经过delay秒后，小球取消穿墙效果"""
+		await asyncio.sleep(delay)
+		self.is_through_wall = False
+
+
+	async def _back_to_normal_speed_after(self, delay):
+
+		"""经过delay秒后，小球速度回归正常"""
+		await asyncio.sleep(delay)
+		self.is_turtle = False
 
 
 	def blitme(self):
