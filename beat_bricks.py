@@ -24,6 +24,7 @@ class BeatBricks:
 		self.board = Board(self)										# 游戏中的板子
 		self.ball = Ball(self)											# 游戏中的小球
 		self._create_wall()												# 创建墙
+		self.mouse_speed_x = 0 											# 鼠标横向运动速度
 
 
 	def _create_wall(self):
@@ -41,8 +42,11 @@ class BeatBricks:
 		task_main_loop = asyncio.create_task(self._main_loop())
 		# 检测道具属性的协程
 		task_check_effect_loop = asyncio.create_task(self._check_effect_loop())
+		# 用于检测鼠标运动速度的协程（用鼠标速度指定小球运动速度）
+		task_get_mouse_speed_x = asyncio.create_task(self._get_mouse_speed_x())
 		await task_main_loop
 		await task_check_effect_loop
+		await task_get_mouse_speed_x
 			
 
 	async def _main_loop(self):
@@ -65,8 +69,22 @@ class BeatBricks:
 			task_check_ball_effect = asyncio.create_task(self.ball.check_effect())
 			await task_check_board_effect
 			await task_check_ball_effect
+			await asyncio.sleep(0.00000000000000001)
 
-			
+	
+	async def _get_mouse_speed_x(self):
+
+		"""检测鼠标运动的速度"""
+		while True:
+			mouse_x1 = pygame.mouse.get_pos()[0]
+			await asyncio.sleep(0.05)
+			mouse_x2 = pygame.mouse.get_pos()[0]
+			if mouse_x2 - mouse_x1 > 0.1 or mouse_x2 - mouse_x1 < -0.1:
+				self.mouse_speed_x = (mouse_x2 - mouse_x1)/0.05
+			else:
+				self.mouse_speed_x = 0
+
+
 
 	def _check_input_event(self):
 
@@ -74,6 +92,9 @@ class BeatBricks:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				quit()
+			elif event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_q:
+					quit()
 
 
 	def _update_ball(self):
@@ -88,7 +109,7 @@ class BeatBricks:
 			# 若小球耗尽，则游戏失败
 			if self.settings.ball_number < 0:
 				pass
-			time.sleep(0.5)
+			# time.sleep(0.5)
 			self.ball.reset_pos()
 
 		# 检测小球是否打到砖块

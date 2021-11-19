@@ -22,7 +22,8 @@ class Ball(Sprite):
 		self.surface = pygame.transform.scale(self.surface, (self.width, self.height))
 		self.rect = self.surface.get_rect()
 
-		self.rect.midbottom = self.game.board.rect.center
+		self.rect.midbottom = self.game.board.rect.midtop
+		self.rect.y - 50
 
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
@@ -43,7 +44,8 @@ class Ball(Sprite):
 	def reset_pos(self):
 
 		"""将小球的位置回归到板子上"""
-		self.rect.midbottom = self.game.board.rect.center
+		self.rect.midbottom = self.game.board.rect.midtop
+		self.rect.y - 30
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
 		self.speed_x = self.game.settings.ball_speed_x
@@ -61,6 +63,8 @@ class Ball(Sprite):
 		else:
 			self._check_hit_border()
 
+			self._speed_stablizer()
+
 			# 若有乌龟道具效果，则速度变为原来的五分之一
 			if self.is_turtle:
 				self.x += self.speed_x/5
@@ -75,7 +79,8 @@ class Ball(Sprite):
 	def _stick_to_board(self):
 
 		"""小球附着在板子上"""
-		self.rect.midbottom = self.game.board.rect.center
+		self.rect.midbottom = self.game.board.rect.midtop
+		self.rect.y - 5
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
 		self.speed_x *= -1
@@ -95,6 +100,16 @@ class Ball(Sprite):
 			self.speed_y *= -1.0
 
 
+	def _speed_stablizer(self):
+
+		"""稳定小球水平速度，防止速度过大"""
+		if self.speed_x > 1.2:
+			self.speed_x = 1.2
+
+		elif self.speed_x < -1.2:
+			self.speed_x = 1.2
+
+
 	def check_beat_brick(self):
 		
 		"""
@@ -104,10 +119,11 @@ class Ball(Sprite):
 		"""
 		collided_brick = pygame.sprite.spritecollideany(self, self.bricks)
 		if collided_brick:
+			print(1)
 
 			# 如果有穿墙效果，就直接穿过
 			if self.is_through_wall:
-				print(1)
+				pass
 
 			else:
 
@@ -127,14 +143,13 @@ class Ball(Sprite):
 		"""
 		检查是否碰到板子
 		若是,则改变方向
+		并改变小球的水平运动速度
 		"""
-		if self.rect.bottom > self.board.rect.centery and self.rect.right > self.board.rect.left and self.rect.left < self.board.rect.right:
+		if self.rect.bottom > self.board.rect.top - 2 and self.rect.right + 10 > self.board.rect.left and self.rect.left - 10 < self.board.rect.right:
 			self.speed_y *= -1.0
-
-
-
-
-	def _set_speed_x_according_to_board(self):
+			if(-1000< self.game.mouse_speed_x < 1000):
+				self.speed_x += self.game.mouse_speed_x/1500
+		
 
 
 	def check_hit_bonus(self):
