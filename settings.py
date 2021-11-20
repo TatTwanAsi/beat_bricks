@@ -22,8 +22,8 @@ class Settings:
 		self.ball_number = 3	# 小球的个数
 
 		# 砖块
-		self.brick_width = 115
-		self.brick_height = 45
+		self.brick_width = 115 
+		self.brick_height = 45 
 		self.brick_color = (25, 161, 94)
 
 		# 墙
@@ -31,11 +31,11 @@ class Settings:
 		self.column = 9
 
 		# 道具
-		self.heart_num = 0
-		self.lengthen_num = 0
-		self.lock_num = 0
-		self.through_wall_num = 0	
-		self.turtle_num = 0
+		self.heart_num = 2
+		self.lengthen_num = 1
+		self.lock_num = 1
+		self.through_wall_num = 2	
+		self.turtle_num = 2
 
 		self.heart_size = (50, 50)
 		self.lengthen_size = (60, 80)

@@ -16,6 +16,7 @@ class UIManager:
 		self.screen = game.screen
 		self.screen_rect = game.screen_rect
 		self.settings = game.settings
+
 		# 获取各个UI元素的图片surface，并指定其位置
 		self.ball_image = pygame.image.load("images/ball.png")
 		self.ball_image = pygame.transform.scale(self.ball_image, (self.settings.ball_width, self.settings.ball_height))
@@ -36,6 +37,8 @@ class UIManager:
 		self._initialize_ball_num_UI()
 		self._initialize_effect_UI()
 		self._initialize_score_UI()
+		self._initialize_win_UI()
+		self._initialize_die_UI()
 
 
 	def _initialize_ball_num_UI(self):
@@ -75,6 +78,26 @@ class UIManager:
 		pass
 
 
+	def _initialize_win_UI(self):
+
+		"""初始化赢的UI"""
+		font = pygame.font.SysFont('Comic Sans MS', 100)
+		win_UI_surface = font.render("YOU WIN", True, (255, 255, 255))
+		win_UI_rect= win_UI_surface.get_rect()
+		win_UI_rect.center = self.screen_rect.center
+		self.win_UI = UIElement(win_UI_surface, win_UI_rect)
+
+
+	def _initialize_die_UI(self):
+
+		"""初始化死的UI"""
+		font = pygame.font.SysFont('Comic Sans MS', 100)
+		die_UI_surface = font.render("YOU DIE", True, (255, 255, 255))
+		die_UI_rect= die_UI_surface.get_rect()
+		die_UI_rect.center = self.screen_rect.center
+		self.die_UI = UIElement(die_UI_surface, die_UI_rect)
+
+
 	def update(self):
 
 		"""更新UI"""
@@ -91,6 +114,19 @@ class UIManager:
 		self._show_effect()				# 显示效果
 		self._show_score()				# 显示游戏得分
 
+
+	def show_win_UI(self):
+
+		"""展示胜利的UI"""
+		self.screen.blit(self.win_UI.image, self.win_UI.rect)
+		pygame.display.flip()
+
+
+	def show_die_UI(self):
+
+		"""展示死亡的UI"""
+		self.screen.blit(self.die_UI.image, self.win_UI.rect)
+		pygame.display.flip()
 
 	def _update_ball_left(self):
 

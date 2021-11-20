@@ -23,7 +23,7 @@ class Ball(Sprite):
 		self.rect = self.surface.get_rect()
 
 		self.rect.midbottom = self.game.board.rect.midtop
-		self.rect.y -= 1
+		self.rect.y -= 5
 
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
@@ -123,13 +123,13 @@ class Ball(Sprite):
 
 				# 给小球加速
 				if self.speed_x > 0:
-					self.speed_x += 0.02
+					self.speed_x += 0.01
 				else:
-					self.speed_x -= 0.02
+					self.speed_x -= 0.01
 				if self.speed_y > 0:
-					self.speed_y += 0.02
+					self.speed_y += 0.01
 				else:
-					self.speed_y -= 0.02
+					self.speed_y -= 0.01
 	
 				# 删除该砖块
 				collided_brick.kill()
@@ -142,8 +142,18 @@ class Ball(Sprite):
 		若是,则改变方向
 		并改变小球的水平运动速度
 		"""
-		if self.rect.bottom > self.board.rect.top and self.rect.right + 10 > self.board.rect.left and self.rect.left - 10 < self.board.rect.right:
+		if self.rect.bottom > self.board.rect.centery and self.rect.right + 10 > self.board.rect.left and self.rect.left - 10 < self.board.rect.right:
 			self.speed_y *= -1.0
+
+			# 给小球加速
+			if self.speed_x > 0:
+				self.speed_x += 0.02
+			else:
+				self.speed_x -= 0.02
+			if self.speed_y > 0:
+				self.speed_y += 0.02
+			else:
+				self.speed_y -= 0.02
 		
 
 	def check_hit_bonus(self):

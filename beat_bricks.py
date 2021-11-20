@@ -59,8 +59,8 @@ class BeatBricks:
 			self._update_ball()				# 更新小球的运动
 			self.UI_manager.update()		# 更新UI
 			self._update_screen()			# 更新屏幕
-			self._check_die()				# 检测死亡
 			self._check_win()				# 检测胜利
+			self._check_die()				# 检测死亡
 			await asyncio.sleep(0.00000000000000001)
 
 
@@ -107,19 +107,22 @@ class BeatBricks:
 		self.ball.check_hit_bonus()
 
 
-	def _check_die(self):
-
-		"""检查是否死亡"""
-		# 若小球剩余数量为0，则判定为死亡，游戏结束
-		if self.settings.ball_number <= 0:
-			time.sleep(2)
-			quit()
-
 	def _check_win(self):
 
 		"""检查是否胜利"""
 		# 若砖块全部被打掉，则游戏胜利
 		if len(self.bricks_manager.bricks) == 0:
+			self.UI_manager.show_win_UI()
+			time.sleep(2)
+			quit()
+
+
+	def _check_die(self):
+
+		"""检查是否死亡"""
+		# 若小球剩余数量为0，则判定为死亡，游戏结束
+		if self.settings.ball_number <= 0:
+			self.UI_manager.show_die_UI()
 			time.sleep(2)
 			quit()
 
