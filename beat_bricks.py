@@ -42,8 +42,6 @@ class BeatBricks:
 		task_main_loop = asyncio.create_task(self._main_loop())
 		# 检测道具属性的协程
 		task_check_effect_loop = asyncio.create_task(self._check_effect_loop())
-		# 用于检测鼠标运动速度的协程（用鼠标速度指定小球运动速度）
-		task_get_mouse_speed_x = asyncio.create_task(self._get_mouse_speed_x())
 		await task_main_loop
 		await task_check_effect_loop
 		await task_get_mouse_speed_x
@@ -70,20 +68,6 @@ class BeatBricks:
 			await task_check_board_effect
 			await task_check_ball_effect
 			await asyncio.sleep(0.00000000000000001)
-
-	
-	async def _get_mouse_speed_x(self):
-
-		"""检测鼠标运动的速度"""
-		while True:
-			mouse_x1 = pygame.mouse.get_pos()[0]
-			await asyncio.sleep(0.05)
-			mouse_x2 = pygame.mouse.get_pos()[0]
-			if mouse_x2 - mouse_x1 > 0.1 or mouse_x2 - mouse_x1 < -0.1:
-				self.mouse_speed_x = (mouse_x2 - mouse_x1)/0.05
-			else:
-				self.mouse_speed_x = 0
-
 
 
 	def _check_input_event(self):
@@ -127,10 +111,10 @@ class BeatBricks:
 		"""屏幕的更新"""
 		self.screen.fill(self.settings.bg_color) 	# 绘制背景，应用指定的背景颜色
 		self.board.blitme()  						# 将板子绘制到背景上
-		self.ball.blitme() 							# 将小球绘制
 		self._hide_mouse() 							# 隐藏鼠标
 		self.bricks_manager.bricks.draw(self.screen)# 绘制所有砖块
 		self.bonus_manager.bonus.draw(self.screen) 	# 绘制所有道具
+		self.ball.blitme() 							# 将小球绘制
 		pygame.display.flip() 						# 将绘制的画面显示出来
 
 

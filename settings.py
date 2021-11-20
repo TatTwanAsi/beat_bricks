@@ -17,28 +17,28 @@ class Settings:
 		self.ball_width = 40
 		self.ball_height = 40
 		self.ball_color = (255, 200, 69)
-		self.ball_speed_x = 0
-		self.ball_speed_y = -0.7
+		self.ball_speed_x = 0.4
+		self.ball_speed_y = 0.6
 		self.ball_number = 3	# 小球的个数
 
 		# 砖块
-		self.brick_width = 70
-		self.brick_height = 30
+		self.brick_width = 115
+		self.brick_height = 45
 		self.brick_color = (25, 161, 94)
 
 		# 墙
-		self.row = 11
-		self.column = 15
+		self.row = 7
+		self.column = 9
 
 		# 道具
-		self.heart_size = (30, 30)
-		self.heart_num = 5
-		self.lengthen_size = (40, 40)
-		self.lengthen_num = 5
-		self.lock_size = (50, 30)
+		self.heart_size = (50, 50)
+		self.heart_num = 3
+		self.lengthen_size = (60, 80)
+		self.lengthen_num = 2
+		self.lock_size = (60, 40)
 		self.lock_num = 2
-		self.through_wall_size = (70, 30)
-		self.through_wall_num = 4
-		self.turtle_size = (30, 30)
-		self.turtle_num = 3
+		self.through_wall_size = (80, 40)
+		self.through_wall_num = 1
+		self.turtle_size = (50, 50)
+		self.turtle_num = 2
 		

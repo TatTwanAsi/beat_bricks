@@ -118,7 +118,7 @@ class BonusManager:
 				if (column_num, row_num) not in self.bonus_locations:
 					self.bonus_locations.append((column_num, row_num))
 					location = ((column_num + 1.0)*self.unit_x, (row_num + 1.0)*self.unit_y)
-					through_wall = PropThroughWall(self.turtle_size, location)
+					through_wall = PropThroughWall(self.through_wall_size, location)
 					self.bonus.add(through_wall)
 					break
 					
