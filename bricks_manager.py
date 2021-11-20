@@ -34,6 +34,6 @@ class BricksManager:
 		"""在墙上铺满砖块"""
 		for row_num in range(self.row):
 			for column_num in range(self.column):
-				location = ((column_num + 1.0)*self.unit_x, (row_num + 1.0)*self.unit_y)
+				location = ((column_num + 1.0)*self.unit_x, (row_num + 2.0)*self.unit_y)
 				brick = Brick(self.brick_width, self.brick_height, self.brick_color, location)
 				self.bricks.add(brick)

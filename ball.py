@@ -45,7 +45,7 @@ class Ball(Sprite):
 
 		"""将小球的位置回归到板子上"""
 		self.rect.midbottom = self.game.board.rect.midtop
-		self.rect.y -= 5
+		self.rect.y -= 10
 		self.x = float(self.rect.x)
 		self.y = float(self.rect.y)
 		self.speed_x = self.game.settings.ball_speed_x

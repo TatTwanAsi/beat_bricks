@@ -8,6 +8,7 @@ from board import Board
 from ball import Ball
 from bonus_manager import BonusManager
 from bricks_manager import BricksManager
+from UI_manager import UIManager
 
 class BeatBricks:
 
@@ -17,14 +18,14 @@ class BeatBricks:
 		"""加载游戏参数设置和游戏资源"""
 		pygame.init()
 		self.settings = Settings()										# 管理游戏设置的实例
-		self.bonus_manager = BonusManager(self)							# 管理道具的实例
-		self.bricks_manager = BricksManager(self)						# 管理砖块的实例
 		self.screen = pygame.display.set_mode(self.settings.screen_size)# 游戏屏幕的surface
 		self.screen_rect = self.screen.get_rect()						# 游戏屏幕的rect
+		self.UI_manager = UIManager(self)								# 创建管理UI的实例
+		self.bonus_manager = BonusManager(self)							# 管理道具的实例
+		self.bricks_manager = BricksManager(self)						# 管理砖块的实例
 		self.board = Board(self)										# 游戏中的板子
 		self.ball = Ball(self)											# 游戏中的小球
 		self._create_wall()												# 创建墙
-		self.mouse_speed_x = 0 											# 鼠标横向运动速度
 
 
 	def _create_wall(self):
@@ -32,7 +33,8 @@ class BeatBricks:
 		"""创建游戏的一堵墙"""
 		# 砖块管理实例在初始化时，用砖块填满了游戏的墙
 		# 道具管理实例在初始化时，在墙上生成了一系列道具
-		pygame.sprite.groupcollide(self.bricks_manager.bricks, self.bonus_manager.bonus, True, False)# 将已有的道具，去替换掉墙上的砖块
+		# 用已有的道具去替换掉墙上的一些砖块
+		pygame.sprite.groupcollide(self.bricks_manager.bricks, self.bonus_manager.bonus, True, False)
 
 
 	async def run_game(self):
@@ -55,7 +57,10 @@ class BeatBricks:
 			self._check_input_event()		# 检测输入事件
 			self.board.move()				# 板子的运动
 			self._update_ball()				# 更新小球的运动
+			self.UI_manager.update()		# 更新UI
 			self._update_screen()			# 更新屏幕
+			self._check_die()				# 检测死亡
+			self._check_win()				# 检测胜利
 			await asyncio.sleep(0.00000000000000001)
 
 
@@ -89,11 +94,7 @@ class BeatBricks:
 		# 若小球越过底部边界，则游戏暂停0.5秒，然后将小球归位
 		if self.ball.rect.top > self.screen_rect.bottom:
 			self.settings.ball_number -= 1
-
-			# 若小球耗尽，则游戏失败
-			if self.settings.ball_number < 0:
-				pass
-			# time.sleep(0.5)
+			time.sleep(0.5)
 			self.ball.reset_pos()
 
 		# 检测小球是否打到砖块
@@ -106,6 +107,23 @@ class BeatBricks:
 		self.ball.check_hit_bonus()
 
 
+	def _check_die(self):
+
+		"""检查是否死亡"""
+		# 若小球剩余数量为0，则判定为死亡，游戏结束
+		if self.settings.ball_number <= 0:
+			time.sleep(2)
+			quit()
+
+	def _check_win(self):
+
+		"""检查是否胜利"""
+		# 若砖块全部被打掉，则游戏胜利
+		if len(self.bricks_manager.bricks) == 0:
+			time.sleep(2)
+			quit()
+
+
 	def _update_screen(self):
 
 		"""屏幕的更新"""
@@ -115,6 +133,7 @@ class BeatBricks:
 		self.bricks_manager.bricks.draw(self.screen)# 绘制所有砖块
 		self.bonus_manager.bonus.draw(self.screen) 	# 绘制所有道具
 		self.ball.blitme() 							# 将小球绘制
+		self.UI_manager.show_me()
 		pygame.display.flip() 						# 将绘制的画面显示出来
 
 
