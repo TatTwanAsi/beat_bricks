@@ -1,8 +1,8 @@
 import pygame
 import random
 
-from bonus import PropHeart, PropLengthen, PropLock, PropThroughWall, PropTurtle
-
+# from bonus import PropHeart, PropLengthen, PropLock, PropThroughWall, PropTurtle
+from bonus import Bonus
 
 class BonusManager:
 
@@ -36,97 +36,23 @@ class BonusManager:
 	def _generate_bonus(self):
 
 		"""生成五种道具"""
-		self._generate_heart()
-		self._generate_lengthen()
-		self._generate_lock()
-		self._generate_turtle()
-		self._generate_through_wall()
-
-
-	def _generate_heart(self):
-
-		"""生成心道具"""
 		for num in range(self.heart_num):
-			while True:
-				# 生成两个随机数，分别代表道具的行和列，
-				column_num = random.randint(0, self.column-1)
-				row_num = random.randint(0, self.row-1)
-
-				# 检查所生成的位置是否已被其他道具占有
-				# 若是，则更换位置
-				# 直到与其他道具位置不冲突位置
-				if (column_num, row_num) not in self.bonus_locations:
-					self.bonus_locations.append((column_num, row_num))
-					location = ((column_num + 1.0)*self.unit_x, (row_num + 2.0)*self.unit_y)
-					heart = PropHeart(self.heart_size, location)
-					self.bonus.add(heart)
-					break
-
-
-	def _generate_lengthen(self):
-
-		"""生成增长道具"""
+			heart = Bonus('heart', self.heart_size)
+			self.bonus.add(heart)
 		for num in range(self.lengthen_num):
-			while True:
-				# 生成两个随机数，分别代表道具的行和列，
-				column_num = random.randint(0, self.column-1)
-				row_num = random.randint(0, self.row-1)
-
-				# 检查所生成的位置是否已被其他道具占有
-				# 若是，则更换位置
-				# 直到与其他道具位置不冲突位置
-				if (column_num, row_num) not in self.bonus_locations:
-					self.bonus_locations.append((column_num, row_num))
-					location = ((column_num + 1.0)*self.unit_x, (row_num + 2.0)*self.unit_y)
-					lengthen = PropLengthen(self.heart_size, location)
-					self.bonus.add(lengthen)
-					break
-
-
-	def _generate_lock(self):
-		
-		"""生成琐道具"""
+			lengthen = Bonus('lengthen', self.lengthen_size)
+			self.bonus.add(lengthen)
 		for num in range(self.lock_num):
-			while True:
-				# 生成两个随机数，分别代表道具的行和列，
-				column_num = random.randint(0, self.column-1)
-				row_num = random.randint(0, self.row-1)
-
-				# 检查所生成的位置是否已被其他道具占有
-				# 若是，则更换位置
-				# 直到与其他道具位置不冲突位置
-				if (column_num, row_num) not in self.bonus_locations:
-					self.bonus_locations.append((column_num, row_num))
-					location = ((column_num + 1.0)*self.unit_x, (row_num + 2.0)*self.unit_y)
-					lock = PropLock(self.lock_size, location)
-					self.bonus.add(lock)
-					break
-
-
-	def _generate_through_wall(self):
-		
-		"""生成穿墙道具"""
+			lock = Bonus('lock', self.lock_size)
+			self.bonus.add(lock)
 		for num in range(self.through_wall_num):
-			while True:
-				# 生成两个随机数，分别代表道具的行和列，
-				column_num = random.randint(0, self.column-1)
-				row_num = random.randint(0, self.row-1)
-
-				# 检查所生成的位置是否已被其他道具占有
-				# 若是，则更换位置
-				# 直到与其他道具位置不冲突位置
-				if (column_num, row_num) not in self.bonus_locations:
-					self.bonus_locations.append((column_num, row_num))
-					location = ((column_num + 1.0)*self.unit_x, (row_num + 2.0)*self.unit_y)
-					through_wall = PropThroughWall(self.through_wall_size, location)
-					self.bonus.add(through_wall)
-					break
-					
-
-	def _generate_turtle(self):
-		
-		"""生成乌龟道具"""
+			through_wall = Bonus('through_wall', self.through_wall_size)
+			self.bonus.add(through_wall)
 		for num in range(self.turtle_num):
+			turtle = Bonus('turtle', self.turtle_size)
+			self.bonus.add(turtle)
+		# 指定位置
+		for bonus in self.bonus:
 			while True:
 				# 生成两个随机数，分别代表道具的行和列，
 				column_num = random.randint(0, self.column-1)
@@ -137,7 +63,7 @@ class BonusManager:
 				# 直到与其他道具位置不冲突位置
 				if (column_num, row_num) not in self.bonus_locations:
 					self.bonus_locations.append((column_num, row_num))
-					location = ((column_num + 1.0)*self.unit_x, (row_num + 2.0)*self.unit_y)
-					turtle = PropTurtle(self.turtle_size, location)
-					self.bonus.add(turtle)
+					location = ((column_num + 1.0)*self.unit_x, 20 + (row_num + 1.0)*self.unit_y)
+					bonus.set_location(location)
 					break
+

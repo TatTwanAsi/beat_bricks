@@ -9,6 +9,7 @@ from ball import Ball
 from bonus_manager import BonusManager
 from bricks_manager import BricksManager
 from UI_manager import UIManager
+from level_loader import get_setting_attr_dict
 
 class BeatBricks:
 
@@ -17,7 +18,7 @@ class BeatBricks:
 
 		"""加载游戏参数设置和游戏资源"""
 		pygame.init()
-		self.settings = Settings()										# 管理游戏设置的实例
+		self.settings = Settings(**get_setting_attr_dict(3))										# 管理游戏设置的实例
 		self.screen = pygame.display.set_mode(self.settings.screen_size)# 游戏屏幕的surface
 		self.screen_rect = self.screen.get_rect()						# 游戏屏幕的rect
 		self.score = 0 													# 游戏得分 
@@ -134,23 +135,11 @@ class BeatBricks:
 		"""屏幕的更新"""
 		self.screen.fill(self.settings.bg_color) 	# 绘制背景，应用指定的背景颜色
 		self.board.blitme()  						# 将板子绘制到背景上
-		self._hide_mouse() 							# 隐藏鼠标
 		self.bricks_manager.bricks.draw(self.screen)# 绘制所有砖块
 		self.bonus_manager.bonus.draw(self.screen) 	# 绘制所有道具
 		self.ball.blitme() 							# 将小球绘制
 		self.UI_manager.show_me()
 		pygame.display.flip() 						# 将绘制的画面显示出来
-
-
-	def _hide_mouse(self):
-
-		"""当鼠标在游戏屏幕内时，将其隐藏"""
-		mouse_x, mouse_y = pygame.mouse.get_pos()
-		if mouse_x < self.settings.screen_width and mouse_x > 0 and mouse_y < self.settings.screen_height and mouse_y > 0:
-		   pygame.mouse.set_visible(False)
-
-		else:
-			pygame.mouse.set_visible(True)
 
 
 if __name__ == "__main__":

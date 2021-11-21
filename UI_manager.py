@@ -155,12 +155,13 @@ class UIManager:
 			# 吃到新道具，回血，但是效果UI不显示，而是显示到小球剩余数的板块中
 			pass
 
-		else:
+		elif effect_name:
 			if is_push == True:
 				self._effect_UI_push(effect_name)
 	
 			elif is_push == False:
 				self._effect_UI_pop(effect_name)
+			self._set_effect_UI_position()
 
 
 	def _effect_UI_push(self, effect_name):
@@ -179,14 +180,11 @@ class UIManager:
 		effect_UI_surface = pygame.image.load(f"images/{effect_name}.png")
 		effect_UI_surface = pygame.transform.scale(effect_UI_surface, (55, 40))
 		effect_UI_rect = effect_UI_surface.get_rect()
-		effect_UI_rect.left = 400 + len(self.effect_UI_group) * 60
-		effect_UI_rect.top = 10
 		effect_UI = UIElement(effect_UI_surface, effect_UI_rect, effect_name)
 		self.effect_UI_group.add(effect_UI)
 
 
 	def _effect_UI_pop(self, effect_name):
-		print(1)
 
 		"""删除某个效果的UI"""
 		for effect_UI in self.effect_UI_group:
@@ -198,6 +196,18 @@ class UIManager:
 				effect_UI.kill()
 				break
 
+
+	def _set_effect_UI_position(self):
+
+		"""指定UI的位置"""
+		num = 0
+		for effect_UI in self.effect_UI_group:
+
+			# 便利道具效果UI的编组
+			# 指定每个UI元素的位置
+			effect_UI.rect.left = 400 + num * 60
+			effect_UI.rect.top = 10
+			num += 1
 
 	def _update_score(self):
 

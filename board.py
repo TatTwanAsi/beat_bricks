@@ -44,8 +44,8 @@ class Board:
 		若检测到增长属性为真，则增长
 		增长3秒后，变回原来的长度
 		"""
-		# print(1)
 		if self.is_lengthen:
+			self.game.UI_manager.update_effect('lengthen', True)
 			task_lengthen = asyncio.create_task(self._lengthen_board())
 			task_shorten = asyncio.create_task(self._turn_width_back_after(self.settings.lengthen_span_time))
 			await task_lengthen
@@ -74,7 +74,6 @@ class Board:
 		self.rect.bottom = self.screen_rect.bottom
 		self.rect.centerx = pygame.mouse.get_pos()[0]
 		self.game.UI_manager.update_effect('lengthen', False)
-		print('delete_lengthen')
 
 
 	def blitme(self):
