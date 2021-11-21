@@ -68,7 +68,7 @@ class PropThroughWall(Sprite):
 		
 		"""初始化穿墙道具"""
 		super().__init__()
-		self.image = pygame.image.load("images/ThroughWall.png")
+		self.image = pygame.image.load("images/through_wall.png")
 		self.image = pygame.transform.scale(self.image, size)
 		self.rect = self.image.get_rect()
 		self.rect.midtop = location

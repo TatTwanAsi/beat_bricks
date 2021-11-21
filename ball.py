@@ -133,6 +133,7 @@ class Ball(Sprite):
 	
 				# 删除该砖块
 				collided_brick.kill()
+				self.game.score += 1
 
 
 	def check_hit_board(self):
@@ -180,6 +181,8 @@ class Ball(Sprite):
 			elif collided_bonus.get_name() == 'turtle':
 				self.is_turtle = True
 
+			self.game.UI_manager.update_effect(collided_bonus.get_name(), True)
+
 			collided_bonus.kill()
 
 
@@ -189,17 +192,17 @@ class Ball(Sprite):
 
 		# 吃到锁头道具几秒后回归正常
 		if self.is_lock:
-			task_free = asyncio.create_task(self._free_ball_after(3))
+			task_free = asyncio.create_task(self._free_ball_after(self.game.settings.lock_span_time))
 			await task_free
 
 		# 吃到穿墙道具几秒后回归正常
 		elif self.is_through_wall:
-			task_solidify = asyncio.create_task(self._solidify_ball_after(3))
+			task_solidify = asyncio.create_task(self._solidify_ball_after(self.game.settings.through_wall_span_time))
 			await task_solidify
 
 		# 吃到乌龟道具几秒后回归正常
 		elif self.is_turtle:
-			task_back_to_normal_speed = asyncio.create_task(self._back_to_normal_speed_after(3))
+			task_back_to_normal_speed = asyncio.create_task(self._back_to_normal_speed_after(self.game.settings.turtle_span_time))
 			await task_back_to_normal_speed
 
 
@@ -207,6 +210,8 @@ class Ball(Sprite):
 
 		"""经过delay秒后，小球释放"""
 		await asyncio.sleep(delay)
+		self.game.UI_manager.update_effect('lock', False)
+		print('delete_lock')
 		self.is_lock = False
 
 
@@ -214,6 +219,8 @@ class Ball(Sprite):
 
 		"""经过delay秒后，小球取消穿墙效果"""
 		await asyncio.sleep(delay)
+		self.game.UI_manager.update_effect('through_wall', False)
+		print('delete_through_wall')
 		self.is_through_wall = False
 
 
@@ -221,6 +228,8 @@ class Ball(Sprite):
 
 		"""经过delay秒后，小球速度回归正常"""
 		await asyncio.sleep(delay)
+		self.game.UI_manager.update_effect('turtle', False)
+		print('delete_turtle')
 		self.is_turtle = False
 
 

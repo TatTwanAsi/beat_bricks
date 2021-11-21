@@ -12,26 +12,28 @@ class UIManager:
 
 		"""初始化"""
 
-		# 加载图片
+		self.game = game
 		self.screen = game.screen
 		self.screen_rect = game.screen_rect
 		self.settings = game.settings
+		self.UI_text_color = game.settings.UI_text_color
 
 		# 获取各个UI元素的图片surface，并指定其位置
 		self.ball_image = pygame.image.load("images/ball.png")
 		self.ball_image = pygame.transform.scale(self.ball_image, (self.settings.ball_width, self.settings.ball_height))
-		self.heart_image = pygame.image.load("images/heart.png")
-		self.heart_image = pygame.transform.scale(self.heart_image, self.settings.heart_size)
 		self.lengthen_image = pygame.image.load("images/lengthen.png")
-		self.lengthen_image = pygame.transform.scale(self.lengthen_image, self.settings.lengthen_size)
+		self.lengthen_image = pygame.transform.scale(self.lengthen_image, (10, 10))
 		self.lock_image = pygame.image.load("images/lock.png")
-		self.lock_image = pygame.transform.scale(self.lock_image, self.settings.lock_size)
-		self.through_wall_image = pygame.image.load("images/turtle.png")
-		self.through_wall_image = pygame.transform.scale(self.through_wall_image, self.settings.through_wall_size)
+		self.lock_image = pygame.transform.scale(self.lock_image, (self.settings.lock_width/2, self.settings.lock_height/2))
+		self.through_wall_image = pygame.image.load("images/through_wall.png")
+		self.through_wall_image = pygame.transform.scale(self.through_wall_image, (self.settings.through_wall_width/2, self.settings.through_wall_height/2))
+		self.turtle_image = pygame.image.load("images/turtle.png")
+		self.turtle_image = pygame.transform.scale(self.turtle_image, (self.settings.turtle_width/2, self.settings.turtle_height/2))
 
 		# 创建字体
-		pygame.init()
-		self.myfont = pygame.font.SysFont('Comic Sans MS', 20)
+		self.my_ball_font = pygame.font.SysFont('Comic Sans MS', 20)	# 剩余球数字体
+		self.my_score_font = pygame.font.SysFont('Comic Sans MS', 35)	# 分数字体
+		self.my_win_die_font = pygame.font.SysFont('Comic Sans MS', 100)# 显示游戏死亡或成功字体
 
 		# 初始化各个板块的UI
 		self._initialize_ball_num_UI()
@@ -45,7 +47,7 @@ class UIManager:
 
 		"""创建显示小球剩余数目的UI"""
 		self.ball_number = self.settings.ball_number											# 获取小球数目
-		ball_num_surface = self.myfont.render("balls left: ", True, (246, 252, 249))	# 创建文字UI的surface
+		ball_num_surface = self.my_ball_font.render("balls left: ", True, self.UI_text_color)	# 创建文字UI的surface
 		ball_num_rect = ball_num_surface.get_rect()								# 获取文字UI的rect
 		ball_num_rect.top = 10													# 指定文字UI的y
 		ball_num_rect.left = 10													# 指定文字UI的x
@@ -69,20 +71,38 @@ class UIManager:
 	def _initialize_effect_UI(self):
 
 		"""初始化效果的UI"""
-		pass
+		self.effect_UI_group = pygame.sprite.Group()
 
 
 	def _initialize_score_UI(self):
 
 		"""初始化分数UI"""
-		pass
+		self.score = self.game.score
+
+		# 分数的描述文字("Score: ")
+		score_description_surface = self.my_score_font.render("Score: ", True, self.UI_text_color)
+		score_description_rect = score_description_surface.get_rect()
+		score_description_rect.top = 10
+		score_description_rect.right = self.screen_rect.right - 120
+		score_description_UI = UIElement(score_description_surface, score_description_rect)
+
+		# 分数的值
+		score_value_surface = self.my_score_font.render(f"{self.score}", True, self.UI_text_color)
+		score_value_rect = score_description_surface.get_rect()
+		score_value_rect.top = 10
+		score_value_rect.left = self.screen_rect.right - 120
+		score_value_UI = UIElement(score_value_surface, score_value_rect)
+
+		# 完整分数UI
+		self.score_UI = pygame.sprite.Group()
+		self.score_UI.add(score_description_UI)
+		self.score_UI.add(score_value_UI)
 
 
 	def _initialize_win_UI(self):
 
 		"""初始化赢的UI"""
-		font = pygame.font.SysFont('Comic Sans MS', 100)
-		win_UI_surface = font.render("YOU WIN", True, (255, 255, 255))
+		win_UI_surface = self.my_win_die_font.render("YOU WIN", True, self.UI_text_color)
 		win_UI_rect= win_UI_surface.get_rect()
 		win_UI_rect.center = self.screen_rect.center
 		self.win_UI = UIElement(win_UI_surface, win_UI_rect)
@@ -91,8 +111,7 @@ class UIManager:
 	def _initialize_die_UI(self):
 
 		"""初始化死的UI"""
-		font = pygame.font.SysFont('Comic Sans MS', 100)
-		die_UI_surface = font.render("YOU DIE", True, (255, 255, 255))
+		die_UI_surface = self.my_win_die_font.render("YOU DIE", True, self.UI_text_color)
 		die_UI_rect= die_UI_surface.get_rect()
 		die_UI_rect.center = self.screen_rect.center
 		self.die_UI = UIElement(die_UI_surface, die_UI_rect)
@@ -103,30 +122,8 @@ class UIManager:
 		"""更新UI"""
 		# while True:
 		self._update_ball_left()		# 更新剩余小球数
-		self._update_effect()			# 更新表示道具效果的图标，以及效果还要持续多久才结束
 		self._update_score()			# 更新游戏的得分
 
-
-	def show_me(self):
-
-		"""显示UI"""
-		self._show_ball_left()			# 显示小球剩余数
-		self._show_effect()				# 显示效果
-		self._show_score()				# 显示游戏得分
-
-
-	def show_win_UI(self):
-
-		"""展示胜利的UI"""
-		self.screen.blit(self.win_UI.image, self.win_UI.rect)
-		pygame.display.flip()
-
-
-	def show_die_UI(self):
-
-		"""展示死亡的UI"""
-		self.screen.blit(self.die_UI.image, self.win_UI.rect)
-		pygame.display.flip()
 
 	def _update_ball_left(self):
 
@@ -151,6 +148,80 @@ class UIManager:
 		self.ball_number = self.settings.ball_number
 
 
+	def update_effect(self, effect_name='', is_push = None):
+
+		"""更新道具效果UI，属于被动更新"""
+		if effect_name == 'heart':
+			# 吃到新道具，回血，但是效果UI不显示，而是显示到小球剩余数的板块中
+			pass
+
+		else:
+			if is_push == True:
+				self._effect_UI_push(effect_name)
+	
+			elif is_push == False:
+				self._effect_UI_pop(effect_name)
+
+
+	def _effect_UI_push(self, effect_name):
+
+		"""增加某个效果的UI"""
+		for effect_UI in self.effect_UI_group:
+
+			# 遍历道具效果UI编组
+			# 检查其中是否已经有了这个效果
+			# 若有的话，就把他从编组中删除
+			if effect_UI.name == effect_name:
+				effect_UI.kill()
+				break
+
+		# 创建某个效果的UI，将其压入效果UI编组中
+		effect_UI_surface = pygame.image.load(f"images/{effect_name}.png")
+		effect_UI_surface = pygame.transform.scale(effect_UI_surface, (55, 40))
+		effect_UI_rect = effect_UI_surface.get_rect()
+		effect_UI_rect.left = 400 + len(self.effect_UI_group) * 60
+		effect_UI_rect.top = 10
+		effect_UI = UIElement(effect_UI_surface, effect_UI_rect, effect_name)
+		self.effect_UI_group.add(effect_UI)
+
+
+	def _effect_UI_pop(self, effect_name):
+		print(1)
+
+		"""删除某个效果的UI"""
+		for effect_UI in self.effect_UI_group:
+
+			# 遍历道具效果UI编组
+			# 检查其中是否已经有了这个效果
+			# 若有的话，就把他从编组中删除
+			if effect_UI.name == effect_name:
+				effect_UI.kill()
+				break
+
+
+	def _update_score(self):
+
+		"""更新分数UI"""
+		if self.score != self.game.score:
+			
+			self.score = self.game.score
+			self.score_UI.sprites()[1].kill()
+			score_value_surface = self.my_score_font.render(f"{self.score}", True, self.UI_text_color)
+			score_value_rect = score_value_surface.get_rect()
+			score_value_rect.top = 10
+			score_value_rect.left = self.screen_rect.right - 120
+			score_value_UI = UIElement(score_value_surface, score_value_rect)
+			self.score_UI.add(score_value_UI)
+
+
+	def show_me(self):
+
+		"""显示UI"""
+		self._show_ball_left()			# 显示小球剩余数
+		self._show_effect()				# 显示效果
+		self._show_score()				# 显示游戏得分
+
+
 	def _show_ball_left(self):
 
 		"""显示小球剩余个数"""
@@ -158,25 +229,27 @@ class UIManager:
 		self.screen.blit(self.ball_num_UI.image, self.ball_num_UI.rect)
 
 
-	def _update_effect(self):
-
-		"""更新道具效果UI"""
-		pass
-
-
 	def _show_effect(self):
 
 		"""显示道具效果UI"""
-		pass
-
-
-	def _update_score(self):
-
-		"""更新分数UI"""
-		pass
-
+		self.effect_UI_group.draw(self.screen)
+	
 
 	def _show_score(self):
 
 		"""显示分数UI"""
-		pass
+		self.score_UI.draw(self.screen)
+
+
+	def show_win_UI(self):
+
+		"""展示胜利的UI"""
+		self.screen.blit(self.win_UI.image, self.win_UI.rect)
+		pygame.display.flip()
+
+
+	def show_die_UI(self):
+
+		"""展示死亡的UI"""
+		self.screen.blit(self.die_UI.image, self.win_UI.rect)
+		pygame.display.flip()

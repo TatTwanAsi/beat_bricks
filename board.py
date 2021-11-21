@@ -47,7 +47,7 @@ class Board:
 		# print(1)
 		if self.is_lengthen:
 			task_lengthen = asyncio.create_task(self._lengthen_board())
-			task_shorten = asyncio.create_task(self._turn_width_back_after(2))
+			task_shorten = asyncio.create_task(self._turn_width_back_after(self.settings.lengthen_span_time))
 			await task_lengthen
 			await task_shorten
 		await asyncio.sleep(0.0000000001)
@@ -73,6 +73,8 @@ class Board:
 		self.rect = self.surface.get_rect()
 		self.rect.bottom = self.screen_rect.bottom
 		self.rect.centerx = pygame.mouse.get_pos()[0]
+		self.game.UI_manager.update_effect('lengthen', False)
+		print('delete_lengthen')
 
 
 	def blitme(self):

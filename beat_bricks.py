@@ -20,6 +20,7 @@ class BeatBricks:
 		self.settings = Settings()										# 管理游戏设置的实例
 		self.screen = pygame.display.set_mode(self.settings.screen_size)# 游戏屏幕的surface
 		self.screen_rect = self.screen.get_rect()						# 游戏屏幕的rect
+		self.score = 0 													# 游戏得分 
 		self.UI_manager = UIManager(self)								# 创建管理UI的实例
 		self.bonus_manager = BonusManager(self)							# 管理道具的实例
 		self.bricks_manager = BricksManager(self)						# 管理砖块的实例
@@ -94,6 +95,7 @@ class BeatBricks:
 		# 若小球越过底部边界，则游戏暂停0.5秒，然后将小球归位
 		if self.ball.rect.top > self.screen_rect.bottom:
 			self.settings.ball_number -= 1
+			self.score -= 1
 			time.sleep(0.5)
 			self.ball.reset_pos()
 

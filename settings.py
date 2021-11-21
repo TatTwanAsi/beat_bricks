@@ -32,15 +32,27 @@ class Settings:
 
 		# 道具
 		self.heart_num = 2
-		self.lengthen_num = 1
-		self.lock_num = 1
-		self.through_wall_num = 2	
-		self.turtle_num = 2
+		self.lengthen_num = 3
+		self.lock_num = 2
+		self.through_wall_num = 3	
+		self.turtle_num = 1
+		# 道具大小
+		self.heart_width = 50
+		self.heart_height = 50
+		self.lengthen_width = 60
+		self.lengthen_height = 60
+		self.lock_width = 60
+		self.lock_height = 40
+		self.through_wall_width = 80
+		self.through_wall_height = 40
+		self.turtle_width = 50
+		self.turtle_height = 50
+		# 道具效果持续时间
+		self.lengthen_span_time = 3
+		self.lock_span_time = 2
+		self.through_wall_span_time = 3
+		self.turtle_span_time = 2
 
-		self.heart_size = (50, 50)
-		self.lengthen_size = (60, 80)
-		self.lock_size = (60, 40)
-		self.through_wall_size = (80, 40)
-		self.turtle_size = (50, 50)
-		
+		# UI设置
+		self.UI_text_color = (246, 252, 249)
 		

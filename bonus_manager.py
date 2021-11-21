@@ -25,11 +25,11 @@ class BonusManager:
 		self.turtle_num = game.settings.turtle_num
 		self.through_wall_num = game.settings.through_wall_num
 		# 各个道具的大小
-		self.heart_size = game.settings.heart_size
-		self.lengthen_size = game.settings.lengthen_size
-		self.lock_size = game.settings.lock_size
-		self.turtle_size = game.settings.turtle_size
-		self.through_wall_size = game.settings.through_wall_size
+		self.heart_size = (game.settings.heart_width, game.settings.heart_height)
+		self.lengthen_size = (game.settings.lengthen_width, game.settings.lengthen_height)
+		self.lock_size = (game.settings.lock_width, game.settings.lock_height)
+		self.through_wall_size = (game.settings.through_wall_width, game.settings.through_wall_height)
+		self.turtle_size = (game.settings.turtle_width, game.settings.turtle_height)
 		self._generate_bonus()	# 生成道具
 
 
