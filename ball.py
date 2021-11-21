@@ -64,12 +64,16 @@ class Ball(Sprite):
 			self._check_hit_border()
 
 			# 若有乌龟道具效果，则速度变为原来的五分之一
-			if self.is_turtle:
-				self.x += self.speed_x/5
-				self.y -= self.speed_y/5
+			if self.game.is_pause:
+				self.x += 0
+				self.y += 0
 			else:
-				self.x += self.speed_x
-				self.y -= self.speed_y
+				if self.is_turtle:
+					self.x += self.speed_x/5
+					self.y -= self.speed_y/5
+				else:
+					self.x += self.speed_x
+					self.y -= self.speed_y
 			self.rect.x = self.x
 			self.rect.y = self.y
 
@@ -122,10 +126,6 @@ class Ball(Sprite):
 					self.speed_x *= -1.0
 
 				# 给小球加速
-				if self.speed_x > 0:
-					self.speed_x += 0.01
-				else:
-					self.speed_x -= 0.01
 				if self.speed_y > 0:
 					self.speed_y += 0.01
 				else:
@@ -148,13 +148,9 @@ class Ball(Sprite):
 
 			# 给小球加速
 			if self.speed_x > 0:
-				self.speed_x += 0.02
+				self.speed_x += 0.05
 			else:
-				self.speed_x -= 0.02
-			if self.speed_y > 0:
-				self.speed_y += 0.02
-			else:
-				self.speed_y -= 0.02
+				self.speed_x -= 0.05
 		
 
 	def check_hit_bonus(self):

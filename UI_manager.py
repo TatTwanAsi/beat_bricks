@@ -41,6 +41,7 @@ class UIManager:
 		self._initialize_score_UI()
 		self._initialize_win_UI()
 		self._initialize_die_UI()
+		self._initialize_pause_UI()
 
 
 	def _initialize_ball_num_UI(self):
@@ -116,6 +117,26 @@ class UIManager:
 		die_UI_rect.center = self.screen_rect.center
 		self.die_UI = UIElement(die_UI_surface, die_UI_rect)
 
+
+	def _initialize_pause_UI(self):
+		font_big = pygame.font.SysFont('Comic Sans MS', 100)
+		pause_text = font_big.render('PAUSED', True, self.UI_text_color)
+		pause_text_rect = pause_text.get_rect()
+		pause_text_rect.centerx = self.screen_rect.centerx
+		pause_text_rect.centery = self.screen_rect.centery - 20
+		pause_text_UI = UIElement(pause_text, pause_text_rect)
+
+		font_small = pygame.font.SysFont('Comic Sans MS', 25)
+		tip_text = font_small.render('hit R to resume', True, self.UI_text_color)
+		tip_text_rect = tip_text.get_rect()
+		tip_text_rect.centerx = self.screen_rect.centerx
+		tip_text_rect.centery = self.screen_rect.centery + 60
+		pause_tip_UI = UIElement(tip_text, tip_text_rect)
+
+		self.pause_UI = pygame.sprite.Group()
+		self.pause_UI.add(pause_text_UI)
+		self.pause_UI.add(pause_tip_UI)
+		
 
 	def update(self):
 
@@ -209,6 +230,7 @@ class UIManager:
 			effect_UI.rect.top = 10
 			num += 1
 
+
 	def _update_score(self):
 
 		"""更新分数UI"""
@@ -230,6 +252,8 @@ class UIManager:
 		self._show_ball_left()			# 显示小球剩余数
 		self._show_effect()				# 显示效果
 		self._show_score()				# 显示游戏得分
+		if self.game.is_pause:
+			self.pause_UI.draw(self.screen)# 显示暂停UI
 
 
 	def _show_ball_left(self):
@@ -263,3 +287,4 @@ class UIManager:
 		"""展示死亡的UI"""
 		self.screen.blit(self.die_UI.image, self.win_UI.rect)
 		pygame.display.flip()
+		

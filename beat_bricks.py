@@ -14,11 +14,11 @@ from level_loader import get_setting_attr_dict
 class BeatBricks:
 
 	"""管理《打砖块》的游戏资源以及行为"""
-	def __init__(self):
+	def __init__(self, level):
 
 		"""加载游戏参数设置和游戏资源"""
 		pygame.init()
-		self.settings = Settings(**get_setting_attr_dict(3))										# 管理游戏设置的实例
+		self.settings = Settings(**get_setting_attr_dict(level))										# 管理游戏设置的实例
 		self.screen = pygame.display.set_mode(self.settings.screen_size)# 游戏屏幕的surface
 		self.screen_rect = self.screen.get_rect()						# 游戏屏幕的rect
 		self.score = 0 													# 游戏得分 
@@ -28,6 +28,8 @@ class BeatBricks:
 		self.board = Board(self)										# 游戏中的板子
 		self.ball = Ball(self)											# 游戏中的小球
 		self._create_wall()												# 创建墙
+		self.is_pause = False											# 游戏是否暂停
+		pygame.display.set_caption("Beat Bricks")						# 设置标题
 
 
 	def _create_wall(self):
@@ -60,20 +62,9 @@ class BeatBricks:
 			self.board.move()				# 板子的运动
 			self._update_ball()				# 更新小球的运动
 			self.UI_manager.update()		# 更新UI
-			self._update_screen()			# 更新屏幕
 			self._check_win()				# 检测胜利
 			self._check_die()				# 检测死亡
-			await asyncio.sleep(0.00000000000000001)
-
-
-	async def _check_effect_loop(self):
-
-		"""检查游戏中各个元素是否被赋予了道具效果"""
-		while True:
-			task_check_board_effect = asyncio.create_task(self.board.check_effect())
-			task_check_ball_effect = asyncio.create_task(self.ball.check_effect())
-			await task_check_board_effect
-			await task_check_ball_effect
+			self._update_screen()			# 更新屏幕
 			await asyncio.sleep(0.00000000000000001)
 
 
@@ -86,6 +77,10 @@ class BeatBricks:
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_q:
 					quit()
+				elif event.key == pygame.K_ESCAPE:
+					self.is_pause = True
+				elif event.key == pygame.K_r:
+					self.is_pause = False
 
 
 	def _update_ball(self):
@@ -115,6 +110,7 @@ class BeatBricks:
 		"""检查是否胜利"""
 		# 若砖块全部被打掉，则游戏胜利
 		if len(self.bricks_manager.bricks) == 0:
+			self.bricks_manager.bricks.draw(self.screen)
 			self.UI_manager.show_win_UI()
 			time.sleep(2)
 			quit()
@@ -142,7 +138,18 @@ class BeatBricks:
 		pygame.display.flip() 						# 将绘制的画面显示出来
 
 
+	async def _check_effect_loop(self):
+
+		"""检查游戏中各个元素是否被赋予了道具效果"""
+		while True:
+			task_check_board_effect = asyncio.create_task(self.board.check_effect())
+			task_check_ball_effect = asyncio.create_task(self.ball.check_effect())
+			await task_check_board_effect
+			await task_check_ball_effect
+			await asyncio.sleep(0.00000000000000001)
+
+
 if __name__ == "__main__":
 
-	bb = BeatBricks()
+	bb = BeatBricks(3)
 	asyncio.run(bb.run_game())

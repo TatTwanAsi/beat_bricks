@@ -33,7 +33,7 @@ class Board:
 		right_border_x = self.settings.screen_width
 		board_width = self.settings.board_width
 
-		if mouse_pos_x - board_width/2 >= left_border_x and mouse_pos_x + board_width/2 <= right_border_x:
+		if not self.game.is_pause:
 			self.rect.centerx = mouse_pos_x
 
 
