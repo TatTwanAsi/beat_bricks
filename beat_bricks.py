@@ -10,7 +10,7 @@ from bonus_manager import BonusManager
 from bricks_manager import BricksManager
 from UI_manager import UIManager
 from level_loader import get_setting_attr_dict
-from menu import Menu
+import sys
 
 class BeatBricks:
 
@@ -19,32 +19,21 @@ class BeatBricks:
 
 		"""加载游戏参数设置和游戏资源"""
 		pygame.init()
-		pygame.display.set_caption("Beat Bricks")
-		level = self._run_menu()	# 运行菜单，获取关卡
+		self.level = self._run_main_menu()	# 运行菜单
 		if level:
-			print(1)
-			self.settings = Settings(**get_setting_attr_dict(level))		# 管理游戏设置的实例
-			self.screen = pygame.display.set_mode(self.settings.screen_size)# 游戏屏幕的surface
-			self.screen_rect = self.screen.get_rect()						# 游戏屏幕的rect
-			self.score = 0 													# 游戏得分 
-			self.UI_manager = UIManager(self)								# 创建管理UI的实例
-			self.bonus_manager = BonusManager(self)							# 管理道具的实例
-			self.bricks_manager = BricksManager(self)						# 管理砖块的实例
-			self.board = Board(self)										# 游戏中的板子
-			self.ball = Ball(self)											# 游戏中的小球
-			self._create_wall()												# 创建墙
-			self.is_pause = False											# 游戏是否暂停
-									# 设置标题
+			self._initialize_game()
+			
 		else:
-			quit()
+			sys.exit()
 
-	def _run_menu(self):
 
-		"""运行菜单"""
-		self.screen = pygame.display.set_mode((1200, 800))# 游戏屏幕的surface
+	def _run_main_menu(self):
+
+		"""运行主菜单"""
+		self.screen = pygame.display.set_mode((1200, 800))
 		self.screen.fill((48, 56, 65))
 		self.screen_rect = self.screen.get_rect()
-		self._initialize_button()
+		self._initialize_main_menu_UI()
 
 		# 主循环
 		while True:
@@ -52,7 +41,80 @@ class BeatBricks:
 			# 事件监测
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
-					quit()
+					sys.exit()
+				elif event.type == pygame.MOUSEBUTTONUP:
+					self._check_main_menu_button()
+
+			# 更新屏幕
+			self.screen.blit(self.caption, self.caption_rect)
+			self.screen.blit(self.start_game_button, self.start_game_button_rect)
+			self.screen.blit(self.history_score, self.history_score_rect)
+			self.screen.blit(self.quit_game_button, self.quit_game_button_rect)
+			self.screen.blit(self.start_game_text, self.start_game_text_rect)
+			self.screen.blit(self.history_score_text, self.history_score_text_rect)
+			self.screen.blit(self.quit_game_text, self.quit_game_text_rect)
+			pygame.display.flip()
+
+
+	def _check_main_menu_button(self):
+
+		"""检查用户点击了主菜单的哪个按钮"""
+		if self.caption_rect.left < pygame.mouse.get_pos()[0] < self.caption_rect.right and self.caption_rect.top < pygame.mouse.get_pos()[1] < self.caption_rect.bottom:
+			self._run_select_level_menu()
+
+
+	def _initialize_main_menu_UI(self):
+
+		"""初始化主菜单的UI"""
+		caption_font = pygame.font.SysFont('Comic Sans MS', 200)
+		font = font = pygame.font.SysFont('Comic Sans MS', 30)
+
+		self.caption = font.render('Beat Bricks', True, (250, 250, 250))
+		self.caption_rect = self.caption.get_rect()
+		self.caption_rect.center = self.screen_rect.center
+		self.caption_rect.centery - 200
+
+		self.start_game_button = pygame.Surface((200, 100))
+		self.start_game_button.fill((79, 86, 94))
+		self.start_game_button_rect = self.start_game_button.get_rect()
+		self.start_game_button_rect.center = (600, 500)
+		self.start_game_text = font.render('Start', True, (250, 250, 250))
+		self.start_game_text_rect = self.start_game_button_text.get_rect()
+		self.start_game_text_rect.center = self.start_game_button_rect.center
+
+		self.history_score_button = pygame.Surface((200, 200))
+		self.history_score_button.fill((79, 86, 94))
+		self.history_score_button_rect = self.start_game_button.get_rect()
+		self.history_score_button_rect.center = (600, 600)
+		self.history_score_text = font.render('History', True, (250, 250, 250))
+		self.history_score_text_rect = self.start_game_button_text.get_rect()
+		self.history_score_text_rect.center = self.start_game_button_rect.center
+
+
+		self.quit_game_button = pygame.Surface((200, 200))
+		self.quit_game_button.fill((79, 86, 94))
+		self.quit_game_button_rect = self.start_game_button.get_rect()
+		self.quit_game_rect.center = (600, 700)
+		self.quit_game_text = font.render('Quit', True, (250, 250, 250))
+		self.quit_game_text_rect = self.start_game_button_text.get_rect()
+		self.quit_game_text_rect.center = self.start_game_button_rect.center
+
+
+	def _run_select_level_menu(self):
+
+		"""运行关卡选择界面"""
+		self.screen = pygame.display.set_mode((1200, 800))# 游戏屏幕的surface
+		self.screen.fill((48, 56, 65))
+		self.screen_rect = self.screen.get_rect()
+		self._initialize_level_button()
+
+		# 主循环
+		while True:
+
+			# 事件监测
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					sys.exit()
 
 				elif event.type == pygame.MOUSEBUTTONUP:
 					level = self._check_level()
@@ -70,7 +132,7 @@ class BeatBricks:
 			pygame.display.flip()
 
 
-	def _initialize_button(self):
+	def _initialize_level_button(self):
 
 		"""初始化按钮"""
 		font = pygame.font.SysFont('Comic Sans MS', 40)
@@ -97,6 +159,23 @@ class BeatBricks:
 		self.level_3_text = font.render('level 3', True, (250, 250, 250))
 		self.level_3_text_rect = self.level_3_text.get_rect()
 		self.level_3_text_rect.center = self.level_3_rect.center
+
+
+	def _initialize_game(self):
+
+		"""初始化游戏"""
+		self.settings = Settings(**get_setting_attr_dict(self.level))	# 管理游戏设置的实例
+		self.screen = pygame.display.set_mode(self.settings.screen_size)# 游戏屏幕的surface
+		self.screen_rect = self.screen.get_rect()						# 游戏屏幕的rect
+		self.score = 0 													# 游戏得分 
+		self.UI_manager = UIManager(self)								# 创建管理UI的实例
+		self.bonus_manager = BonusManager(self)							# 管理道具的实例
+		self.bricks_manager = BricksManager(self)						# 管理砖块的实例
+		self.board = Board(self)										# 游戏中的板子
+		self.ball = Ball(self)											# 游戏中的小球
+		self._create_wall()												# 创建墙
+		self.is_pause = False											# 游戏是否暂停
+		pygame.display.set_caption("Beat Bricks")						# 设置标题
 
 
 	def _check_level(self):
@@ -153,10 +232,10 @@ class BeatBricks:
 		"""检测输入事件"""
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				quit()
+				sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_q:
-					quit()
+					sys.exit()
 				elif event.key == pygame.K_ESCAPE:
 					self.is_pause = True
 				elif event.key == pygame.K_r:
@@ -193,8 +272,7 @@ class BeatBricks:
 			self.bricks_manager.bricks.draw(self.screen)
 			self.UI_manager.show_win_UI()
 			time.sleep(2)
-			quit()
-
+			sys.exit()
 
 	def _check_die(self):
 
@@ -203,7 +281,7 @@ class BeatBricks:
 		if self.settings.ball_number <= 0:
 			self.UI_manager.show_die_UI()
 			time.sleep(2)
-			quit()
+			sys.exit()
 
 
 	def _update_screen(self):
