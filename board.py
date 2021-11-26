@@ -30,7 +30,7 @@ class Board:
 		"""让板子跟随鼠标移动，并且不让板子越界"""
 		mouse_pos_x = pygame.mouse.get_pos()[0]
 		left_border_x = 0
-		right_border_x = self.settings.screen_width
+		right_border_x = self.game.screen_width
 		board_width = self.settings.board_width
 
 		if not self.game.is_pause:

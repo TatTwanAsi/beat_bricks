@@ -84,14 +84,14 @@ class UIManager:
 		score_description_surface = self.my_score_font.render("Score: ", True, self.UI_text_color)
 		score_description_rect = score_description_surface.get_rect()
 		score_description_rect.top = 10
-		score_description_rect.right = self.screen_rect.right - 120
+		score_description_rect.right = self.screen_rect.right - 200
 		score_description_UI = UIElement(score_description_surface, score_description_rect)
 
 		# 分数的值
 		score_value_surface = self.my_score_font.render(f"{self.score}", True, self.UI_text_color)
 		score_value_rect = score_description_surface.get_rect()
 		score_value_rect.top = 10
-		score_value_rect.left = self.screen_rect.right - 120
+		score_value_rect.left = self.screen_rect.right - 200
 		score_value_UI = UIElement(score_value_surface, score_value_rect)
 
 		# 完整分数UI
@@ -241,7 +241,7 @@ class UIManager:
 			score_value_surface = self.my_score_font.render(f"{self.score}", True, self.UI_text_color)
 			score_value_rect = score_value_surface.get_rect()
 			score_value_rect.top = 10
-			score_value_rect.left = self.screen_rect.right - 120
+			score_value_rect.left = self.screen_rect.right - 200
 			score_value_UI = UIElement(score_value_surface, score_value_rect)
 			self.score_UI.add(score_value_UI)
 

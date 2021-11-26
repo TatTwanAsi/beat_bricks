@@ -16,8 +16,8 @@ class BricksManager:
 		self.column = game.settings.column
 
 		# 墙上一个单元在x，y上的大小
-		self.unit_y = (float(game.settings.screen_height)/2)/(float(self.row)+1)
-		self.unit_x = float(game.settings.screen_width)/(float(self.column)+1)
+		self.unit_y = (float(game.screen_height)/2)/(float(self.row)+1)
+		self.unit_x = float(game.screen_width)/(float(self.column)+1)
 
 		# 砖块的参数
 		self.brick_width = game.settings.brick_width

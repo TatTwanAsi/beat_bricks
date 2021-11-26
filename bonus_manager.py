@@ -14,8 +14,8 @@ class BonusManager:
 		self.row = game.settings.row
 		self.column = game.settings.column
 		# 墙上每个单元格在x，y上的大小
-		self.unit_y = (float(game.settings.screen_height)/2)/(float(self.row)+1)
-		self.unit_x = float(game.settings.screen_width)/(float(self.column)+1)
+		self.unit_y = (float(game.screen_height)/2)/(float(self.row)+1)
+		self.unit_x = float(game.screen_width)/(float(self.column)+1)
 		self.bonus = pygame.sprite.Group()	# 创建一个空的道具编组
 		self.bonus_locations = []			# 存放各个道具的位置，防止生成的道具位置重叠
 		# 各个道具的个数
