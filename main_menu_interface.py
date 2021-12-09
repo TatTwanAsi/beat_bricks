@@ -12,6 +12,7 @@ class MainMenuInterface:
 		self.screen.fill((48, 56, 65))
 		self.screen_rect = self.screen.get_rect()
 		self._initialize_UI()
+		pygame.display.set_caption('Beat Bricks')
 
 
 	def _initialize_UI(self):

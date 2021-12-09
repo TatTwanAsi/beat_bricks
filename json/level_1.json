@@ -10,7 +10,6 @@
 "brick_width": 115, 
 "brick_height": 45, 
 "brick_color": [25, 161, 94], 
-"brick_height": 45, 
 "brick_max_hit_num": 1, 
 "row": 7, "column": 9, 
 "heart_num": 2, 

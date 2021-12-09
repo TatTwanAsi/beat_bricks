@@ -36,6 +36,7 @@ class GameInterface:
 		pygame.display.set_caption("Beat Bricks")						# 设置标题
 
 		self._initialize_back_button()
+		pygame.display.set_caption('Beat Bricks')
 
 
 	def _initialize_back_button(self):
